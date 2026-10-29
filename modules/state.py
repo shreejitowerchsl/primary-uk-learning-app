@@ -1,7 +1,11 @@
 """Central definition and initialisation of every st.session_state key used
 by the app, so switching tabs never loses in-progress work."""
 
+import copy
+
 import streamlit as st
+
+from modules.web_words import SURPRISE_ME
 
 DEFAULTS = {
     # --- global score tracking ---
@@ -58,21 +62,40 @@ DEFAULTS = {
 
     # --- Vocabulary module ---
     "vocab_mode": "📖 Study (Flashcards)",
+    "vocab_use_web": True,
+    "vocab_level": "Year 4",
+    "vocab_topic": SURPRISE_ME,
     "vocab_index": 0,
     "vocab_reveal": False,
+    "vocab_online_card": None,
+    "vocab_web_error": None,
+    "vocab_seen_cards": [],
     "vocab_quiz_word": None,
     "vocab_quiz_example": None,
     "vocab_quiz_correct_meaning": None,
     "vocab_quiz_options": None,
     "vocab_quiz_feedback": None,
+    "vocab_search_input": "",
+    "vocab_search_result": None,
+    "vocab_search_error": None,
+    "vocab_search_suggestions": [],
+    "vocab_own_sentence": "",
+    "vocab_own_feedback": None,
 
     # --- Spelling module ---
     "spell_year_group": "Year 4",
     "spell_mode": "📖 Study",
+    "spell_use_web": True,
+    "spell_topic": SURPRISE_ME,
     "spell_study_index": 0,
+    "spell_online_card": None,
+    "spell_seen_words": [],
     "spell_test_word": None,
     "spell_test_definition": None,
     "spell_test_sentence": None,
+    "spell_test_audio": None,
+    "spell_test_phonetic": None,
+    "spell_test_source": None,
     "spell_test_year_group": None,
     "spell_test_feedback": None,
 }
@@ -81,4 +104,5 @@ DEFAULTS = {
 def init_session_state():
     for key, value in DEFAULTS.items():
         if key not in st.session_state:
-            st.session_state[key] = value
+            # deepcopy so list defaults are never shared between users' sessions
+            st.session_state[key] = copy.deepcopy(value)

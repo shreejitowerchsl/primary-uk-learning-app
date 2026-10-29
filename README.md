@@ -9,9 +9,13 @@ An interactive Streamlit learning app for a UK Year 4/5 pupil, covering:
   each with Beginner / Intermediate / Advanced levels
 - **Learn the Abacus** — Beginner → Intermediate → Advanced soroban lessons
   (Direct addition, Small Friends / 5-complement, Big Friends / 10-complement)
-- **English Vocabulary** — flashcards + multiple-choice quiz
-- **Spelling Practice** — Year 4 and Year 5 UK word lists, with a definition
-  + sentence-based spelling test
+- **English Vocabulary** — 🌐 brand-new words from the internet (by topic and
+  Year level) in flashcard and quiz modes, plus a **🔍 Search a Word** section that
+  shows meanings, example sentences, similar/opposite words, pronunciation audio
+  and sentence starters
+- **Spelling Practice** — Year 4 and Year 5 levels: 🌐 a brand-new word each
+  question (definition, sentence clue and British pronunciation audio) or the
+  built-in UK word lists
 
 Every question, answer, and worked solution is stored in `st.session_state`,
 so switching tabs, changing a dropdown, or clicking "Check Answer" never
@@ -28,6 +32,7 @@ year4_learning_app/
     ├── __init__.py
     ├── state.py                 # All session_state defaults, in one place
     ├── helpers.py                # Shared feedback + maths explanation helpers
+    ├── web_words.py              # Internet word services (dictionary + topic words)
     ├── abacus_engine.py          # Abacus drawing + bead-move simulator
     ├── multiplication_tab.py
     ├── division_tab.py
@@ -37,6 +42,33 @@ year4_learning_app/
     ├── vocabulary_tab.py
     └── spelling_tab.py
 ```
+
+## How the internet word feature works
+
+The app uses two free public services. **Neither needs an API key or account.**
+
+| Service | Used for |
+|---|---|
+| [Free Dictionary API](https://dictionaryapi.dev) | meanings, example sentences, phonetics, pronunciation audio |
+| [Datamuse](https://www.datamuse.com/api/) | finding words related to a topic, and how common they are |
+
+- Each new word is chosen from a topic (adventure, animals, space...) and filtered
+  by length and how common it is, so **Year 4** gets friendlier words and
+  **Year 5** gets trickier ones.
+- Nothing is fetched until the pupil clicks a button, and results are cached for
+  a while so repeat look-ups are instant.
+- **If the internet or a service is unavailable, the app automatically falls back
+  to the built-in word lists** and tells the pupil — it never crashes.
+- Streamlit Community Cloud allows outbound internet access by default, so
+  nothing extra is needed when deploying.
+
+Things worth knowing:
+- The dictionary data comes from Wiktionary, so a few definitions can be a bit
+  technical or have no example sentence. The app skips obsolete/offensive-labelled
+  definitions and a small blocklist of unsuitable words, but this is a basic filter —
+  an adult should still supervise open word searches.
+- The free services can rate-limit heavy use; if that happens the app simply
+  uses the built-in lists for that question.
 
 ## Running locally
 
