@@ -17,7 +17,7 @@ import random
 import streamlit as st
 
 from modules.helpers import record_attempt, show_feedback
-from modules.web_words import (
+from modules.english.web_words import (
     SURPRISE_ME,
     TOPICS,
     WebLookupError,
@@ -347,7 +347,7 @@ def _render_test(words, year_group, use_web):
 
     if st.button("✅ Check Spelling", key="spell_test_check_btn"):
         is_correct = typed_word.strip().lower() == word.lower()
-        message = record_attempt(is_correct)
+        message = record_attempt(is_correct, subject="english")
         if not is_correct:
             message += f" The correct spelling was **{word}**."
         st.session_state.spell_test_feedback = (is_correct, message)

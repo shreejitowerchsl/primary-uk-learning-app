@@ -5,12 +5,16 @@ import copy
 
 import streamlit as st
 
-from modules.web_words import SURPRISE_ME
+from modules.english.web_words import SURPRISE_ME
 
 DEFAULTS = {
     # --- global score tracking ---
     "score_correct": 0,
     "score_attempted": 0,
+    "score_maths_correct": 0,
+    "score_maths_attempted": 0,
+    "score_english_correct": 0,
+    "score_english_attempted": 0,
 
     # --- Multiplication module ---
     "mult_category": "2-Digit x 1-Digit",
@@ -48,6 +52,31 @@ DEFAULTS = {
     "abacus_drill_start_svg": None,
     "abacus_drill_steps": None,
     "abacus_drill_feedback": None,
+
+    # --- Addition & Subtraction module ---
+    "as_category": "Column Addition (positive numbers)",
+    "as_last_category": None,
+    "as_qid": 0,
+    "as_question": None,
+    "as_is_word": False,
+    "as_answer": None,
+    "as_steps": None,
+    "as_svg": None,
+    "as_feedback": None,
+
+    # --- Coordinates module ---
+    "co_level": "🟢 Beginner",
+    "co_type": "🎲 Mixed",
+    "co_last_combo": None,
+    "co_qid": 0,
+    "co_question": None,
+    "co_svg": None,
+    "co_answer_type": None,
+    "co_answer": None,
+    "co_choices": None,
+    "co_steps": None,
+    "co_solution_svg": None,
+    "co_feedback": None,
 
     # --- Word Problems module ---
     "wp_operation": "✖️ Multiplication",

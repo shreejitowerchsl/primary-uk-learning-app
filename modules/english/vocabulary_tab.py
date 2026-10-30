@@ -14,7 +14,7 @@ import re
 import streamlit as st
 
 from modules.helpers import record_attempt, show_feedback
-from modules.web_words import (
+from modules.english.web_words import (
     LEVEL_SETTINGS,
     SURPRISE_ME,
     TOPICS,
@@ -280,7 +280,7 @@ def _render_quiz(use_web):
                 st.warning("Pick an answer first!")
             else:
                 is_correct = choice == st.session_state.vocab_quiz_correct_meaning
-                message = record_attempt(is_correct)
+                message = record_attempt(is_correct, subject="english")
                 if not is_correct:
                     message += f" The correct meaning was: **{st.session_state.vocab_quiz_correct_meaning}**."
                 st.session_state.vocab_quiz_feedback = (is_correct, message)

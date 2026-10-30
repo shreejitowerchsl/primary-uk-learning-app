@@ -1,46 +1,57 @@
 # Year 4/5 Learning Adventure 🎓
 
-An interactive Streamlit learning app for a UK Year 4/5 pupil, covering:
+An interactive Streamlit learning app for a UK Year 4/5 pupil, split into two sections.
 
+## 🔢 Maths
+- **Addition & Subtraction** — column methods with carrying/exchanging for positive numbers, then
+  **negative numbers** on a number line: Beginner (−10 to 10), Intermediate (crossing zero),
+  Advanced (adding and subtracting negatives), plus word problems (temperatures, lifts, diving, money, scores)
 - **Multiplication** — 2×1, 2×2, 3×2, 3×3, and Year 4 word problems
 - **Division** — short division ("bus stop" method) with quotient & remainder
 - **Powers** — squares, cubes, and 4th powers
-- **Word Problems** — Multiplication, Division, and two-step Mixed problems,
-  each with Beginner / Intermediate / Advanced levels
-- **Learn the Abacus** — Beginner → Intermediate → Advanced soroban lessons
+- **Word Problems** — Multiplication, Division, and two-step Mixed problems at 3 levels
+- **Coordinates** — lessons plus 7 question types at 3 levels (first quadrant → all four quadrants):
+  read the coordinates, find the point, missing corner of a rectangle, translation, reflection,
+  distance between points, and which quadrant
+- **Abacus** — Beginner → Intermediate → Advanced soroban lessons
   (Direct addition, Small Friends / 5-complement, Big Friends / 10-complement)
-- **English Vocabulary** — 🌐 brand-new words from the internet (by topic and
-  Year level) in flashcard and quiz modes, plus a **🔍 Search a Word** section that
-  shows meanings, example sentences, similar/opposite words, pronunciation audio
-  and sentence starters
-- **Spelling Practice** — Year 4 and Year 5 levels: 🌐 a brand-new word each
-  question (definition, sentence clue and British pronunciation audio) or the
-  built-in UK word lists
 
-Every question, answer, and worked solution is stored in `st.session_state`,
-so switching tabs, changing a dropdown, or clicking "Check Answer" never
-loses your current progress.
+## 📚 English
+- **Vocabulary** — 🌐 brand-new words from the internet (by topic and Year level) in flashcard and
+  quiz modes, plus a **🔍 Search a Word** section with meanings, example sentences, similar/opposite
+  words, pronunciation audio and sentence starters
+- **Spelling** — Year 4 and Year 5 levels: 🌐 a brand-new word each question (definition, sentence clue
+  and British pronunciation audio) or the built-in UK word lists
+
+Every question, answer, and worked solution is stored in `st.session_state`, so switching tabs,
+changing a dropdown, or clicking "Check Answer" never loses your current progress. The sidebar shows
+separate Maths and English scores.
 
 ## Project structure
 
 ```
 year4_learning_app/
-├── app.py                      # Main entry point — run this file
+├── app.py                        # Main entry point — run this file
 ├── requirements.txt
 ├── README.md
 └── modules/
     ├── __init__.py
-    ├── state.py                 # All session_state defaults, in one place
-    ├── helpers.py                # Shared feedback + maths explanation helpers
-    ├── web_words.py              # Internet word services (dictionary + topic words)
-    ├── abacus_engine.py          # Abacus drawing + bead-move simulator
-    ├── multiplication_tab.py
-    ├── division_tab.py
-    ├── powers_tab.py
-    ├── word_problems_tab.py
-    ├── abacus_tab.py
-    ├── vocabulary_tab.py
-    └── spelling_tab.py
+    ├── state.py                  # All session_state defaults, in one place
+    ├── helpers.py                # Shared feedback, scoring + maths explanation helpers
+    ├── maths/
+    │   ├── addsub_tab.py         # Addition & subtraction (positive + negative numbers)
+    │   ├── multiplication_tab.py
+    │   ├── division_tab.py
+    │   ├── powers_tab.py
+    │   ├── word_problems_tab.py
+    │   ├── coordinates_tab.py    # Coordinates chapter
+    │   ├── abacus_tab.py
+    │   ├── abacus_engine.py      # Abacus drawing + bead-move simulator
+    │   └── visuals.py            # Number-line and coordinate-grid SVG drawings
+    └── english/
+        ├── vocabulary_tab.py
+        ├── spelling_tab.py
+        └── web_words.py          # Internet word services (dictionary + topic words)
 ```
 
 ## How the internet word feature works
@@ -105,9 +116,12 @@ steps are:
    git push -u origin main
    ```
    Make sure `app.py`, `requirements.txt`, and the whole `modules/` folder
-   (including `modules/__init__.py`) all end up in the repo root — the file
-   layout on GitHub must match the structure above exactly, since `app.py`
-   imports from `modules.*`.
+   (including its sub-folders `modules/maths/` and `modules/english/`, and the
+   three empty `__init__.py` files inside `modules/`, `modules/maths/` and
+   `modules/english/`) all end up in the repo root — the file layout on GitHub
+   must match the structure above exactly, since `app.py` imports from `modules.*`.
+   (GitHub's web uploader skips nothing, but double-check the empty `__init__.py`
+   files are really there.)
 
 ### 2. Deploy on Streamlit Community Cloud
 
@@ -139,10 +153,10 @@ a minute or two — no extra steps needed.
 
 ### Notes & troubleshooting
 
-- **"ModuleNotFoundError: No module named 'modules'"** — this means the
-  folder structure wasn't preserved when uploading to GitHub. Double-check
-  that `modules/` (with all its `.py` files) sits in the same directory as
-  `app.py`, at the repository root.
+- **"ModuleNotFoundError: No module named 'modules'"** (or `modules.maths`) — this
+  means the folder structure wasn't preserved when uploading to GitHub. Double-check
+  that `modules/` (with its `maths/` and `english/` sub-folders and every `__init__.py`)
+  sits in the same directory as `app.py`, at the repository root.
 - **App looks fine locally but fails to deploy** — check the "Manage app"
   logs on Streamlit Cloud (bottom-right of the app page); the most common
   cause is a missing entry in `requirements.txt`, though this project only

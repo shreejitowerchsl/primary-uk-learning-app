@@ -30,11 +30,13 @@ INCORRECT_MESSAGES = [
 ]
 
 
-def record_attempt(is_correct: bool) -> str:
-    """Update the running score and return an encouraging message."""
+def record_attempt(is_correct: bool, subject: str = "maths") -> str:
+    """Update the running scores (overall + per subject) and return an encouraging message."""
     st.session_state.score_attempted += 1
+    st.session_state[f"score_{subject}_attempted"] += 1
     if is_correct:
         st.session_state.score_correct += 1
+        st.session_state[f"score_{subject}_correct"] += 1
         return random.choice(CORRECT_MESSAGES)
     return random.choice(INCORRECT_MESSAGES)
 

@@ -3,7 +3,7 @@
 import streamlit as st
 
 from modules.helpers import record_attempt, show_feedback
-from modules.abacus_engine import (
+from modules.maths.abacus_engine import (
     draw_abacus_svg,
     generate_direct_add_drill,
     generate_direct_sub_drill,

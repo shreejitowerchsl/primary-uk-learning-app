@@ -1,12 +1,11 @@
 """
 Year 4/5 Learning Adventure
 -----------------------------
-An interactive Streamlit learning app for a UK Year 4/5 pupil, covering:
-  - Multiplication, Division, Powers (maths)
-  - Word Problems (Multiplication & Division, leveled Beginner/Intermediate/Advanced)
-  - Learn the Abacus (Beginner/Intermediate/Advanced)
-  - English Vocabulary (Study + Quiz)
-  - Spelling Practice (Year 4 & Year 5 UK word lists)
+An interactive Streamlit learning app for a UK Year 4/5 pupil, in two sections:
+
+  🔢 MATHS    Addition & Subtraction (positive + negative numbers), Multiplication,
+              Division, Powers, Word Problems, Coordinates, Abacus
+  📚 ENGLISH  Vocabulary (study, quiz, word search), Spelling (Year 4 & 5)
 
 Run locally with:  streamlit run app.py
 See README.md for how to deploy this to Streamlit Community Cloud.
@@ -15,15 +14,16 @@ See README.md for how to deploy this to Streamlit Community Cloud.
 import streamlit as st
 
 from modules.state import init_session_state
-from modules import (
-    multiplication_tab,
-    division_tab,
-    powers_tab,
+from modules.maths import (
     abacus_tab,
+    addsub_tab,
+    coordinates_tab,
+    division_tab,
+    multiplication_tab,
+    powers_tab,
     word_problems_tab,
-    vocabulary_tab,
-    spelling_tab,
 )
+from modules.english import spelling_tab, vocabulary_tab
 
 # =============================================================================
 # PAGE CONFIG & STYLING
@@ -32,7 +32,7 @@ from modules import (
 st.set_page_config(
     page_title="Year 4/5 Learning Adventure",
     page_icon="🧮",
-    layout="centered",
+    layout="wide",
 )
 
 st.markdown(
@@ -41,6 +41,7 @@ st.markdown(
     .stApp {
         background: linear-gradient(180deg, #eef7ff 0%, #fdfdfd 60%);
     }
+    .block-container { max-width: 1050px; }
     .big-title {
         font-size: 2.2rem;
         font-weight: 800;
@@ -115,70 +116,78 @@ init_session_state()
 
 st.markdown('<div class="big-title">🎓 Year 4/5 Learning Adventure</div>', unsafe_allow_html=True)
 st.markdown(
-    '<div class="sub-title">Maths, the abacus, vocabulary and spelling — all in one place! 🚀</div>',
+    '<div class="sub-title">Maths and English practice — all in one place! 🚀</div>',
     unsafe_allow_html=True,
 )
 
-with st.sidebar:
-    st.markdown("### 🌟 Your Score")
-    attempted = st.session_state.score_attempted
-    correct = st.session_state.score_correct
+def _score_badge(correct, attempted):
     st.markdown(f'<span class="streak-badge">{correct} / {attempted} correct</span>', unsafe_allow_html=True)
     if attempted > 0:
         st.progress(correct / attempted)
+
+
+with st.sidebar:
+    st.markdown("### 🌟 Your Score")
+    st.markdown("**🔢 Maths**")
+    _score_badge(st.session_state.score_maths_correct, st.session_state.score_maths_attempted)
+    st.markdown("**📚 English**")
+    _score_badge(st.session_state.score_english_correct, st.session_state.score_english_attempted)
     st.markdown("---")
     st.markdown(
         "**How to use this app:**\n"
-        "1. Pick a topic tab.\n"
-        "2. Click **Generate Question**.\n"
-        "3. Type your answer and click **Check Answer**.\n"
+        "1. Pick **Maths** or **English** at the top.\n"
+        "2. Choose a topic tab.\n"
+        "3. Click **Generate Question**, type your answer, then **Check Answer**.\n"
         "4. Stuck? Open **Show Step-by-Step Solution**!"
     )
 
 # =============================================================================
-# TABS
+# TWO MAIN SECTIONS: MATHS and ENGLISH
 # =============================================================================
 
-(
-    tab_mult,
-    tab_div,
-    tab_pow,
-    tab_word_problems,
-    tab_abacus,
-    tab_vocab,
-    tab_spelling,
-) = st.tabs(
-    [
-        "✖️ Multiplication",
-        "➗ Division",
-        "⬆️ Powers",
-        "📖 Word Problems",
-        "🧮 Learn the Abacus",
-        "📚 Vocabulary",
-        "✏️ Spelling",
-    ]
-)
+section_maths, section_english = st.tabs(["🔢  MATHS", "📚  ENGLISH"])
 
-with tab_mult:
-    multiplication_tab.render()
+with section_maths:
+    (
+        tab_addsub,
+        tab_mult,
+        tab_div,
+        tab_pow,
+        tab_word_problems,
+        tab_coords,
+        tab_abacus,
+    ) = st.tabs(
+        [
+            "➕➖ Addition & Subtraction",
+            "✖️ Multiplication",
+            "➗ Division",
+            "⬆️ Powers",
+            "📖 Word Problems",
+            "📍 Coordinates",
+            "🧮 Abacus",
+        ]
+    )
+    with tab_addsub:
+        addsub_tab.render()
+    with tab_mult:
+        multiplication_tab.render()
+    with tab_div:
+        division_tab.render()
+    with tab_pow:
+        powers_tab.render()
+    with tab_word_problems:
+        word_problems_tab.render()
+    with tab_coords:
+        coordinates_tab.render()
+    with tab_abacus:
+        abacus_tab.render()
 
-with tab_div:
-    division_tab.render()
-
-with tab_pow:
-    powers_tab.render()
-
-with tab_word_problems:
-    word_problems_tab.render()
-
-with tab_abacus:
-    abacus_tab.render()
-
-with tab_vocab:
-    vocabulary_tab.render()
-
-with tab_spelling:
-    spelling_tab.render()
+with section_english:
+    tab_vocab, tab_spelling = st.tabs(["📚 Vocabulary", "✏️ Spelling"])
+    with tab_vocab:
+        vocabulary_tab.render()
+    with tab_spelling:
+        spelling_tab.render()
 
 # =============================================================================
 # FOOTER
