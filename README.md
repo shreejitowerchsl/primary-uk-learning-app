@@ -1,6 +1,6 @@
 # Year 4/5 Learning Adventure 🎓
 
-An interactive Streamlit learning app for a UK Year 4/5 pupil, split into two sections.
+An interactive Streamlit learning app for a UK Year 4/5 pupil, split into three sections: **Maths**, **English** and **Reasoning**.
 
 ## 🔢 Maths
 - **Addition & Subtraction** — column methods with carrying/exchanging for positive numbers, then
@@ -23,9 +23,45 @@ An interactive Streamlit learning app for a UK Year 4/5 pupil, split into two se
 - **Spelling** — Year 4 and Year 5 levels: 🌐 a brand-new word each question (definition, sentence clue
   and British pronunciation audio) or the built-in UK word lists
 
+## 🧠 Reasoning
+Every topic has **Beginner / Intermediate / Advanced** levels, a worked step-by-step explanation, and a **🎲 Mixed** option.
+
+**💬 Verbal Reasoning — 19 topics.** Publishers use many different names for the same skill, so topics are grouped by what the
+question actually asks you to do:
+
+| Topic in the app | Covers these names |
+|---|---|
+| 🔀 Jumbled words | Using letters to make words · Jumbled words · Find the word |
+| 🟰 Same or opposite meanings | Similar meanings · Same or opposite meanings |
+| 🚫 Find the odd word | Find the odd word |
+| 📶 Word stages & putting words in order | Sequence orders · Word stages |
+| 🔢 Number sequences | Sequences · Find a certain number (series) |
+| 🔠 Letter sequences | Letter sequences |
+| 🔤 The alphabet & alphabetical order | The alphabet · Alphabetical order |
+| 🔐 Word codes | Word codes |
+| 🔑 Number codes | Number codes · Using numbers for letters |
+| 🔗 Word connections | Word connections · Word patterns |
+| 🧩 Making new words | Two words to make a new word · Making one word from two · One word makes · Add a word to make a new word · Using words to make words · Making new words |
+| ❓ Missing letters | One missing letter makes two words · Three missing letters make a word |
+| 🕵️ Find the hidden word | Find the hidden word |
+| ✍️ Make sense of sentences | Make sense of sentences · Fill in the spaces |
+| 📖 Definitions & crossword clues | Using definitions · Crossword puzzles |
+| 📊 Using grids to find information | Using grids to find information |
+| 🧠 Logic word problems | Word problems |
+| 🟦 Algebra | Algebra |
+| 🎯 Find the mystery number | Find a certain number |
+
+**🔷 Non-Verbal Reasoning — 9 topics:** Similarity · Matrices · Analogy · Rotation · Combining pieces (which piece fits the gap) ·
+Embedded figure · Placing dots · Dice and cubes (nets) · Codes. All pictures are drawn by the app (SVG), so nothing needs downloading.
+
+**How the answers are guaranteed correct:** every puzzle is built so it has exactly **one** right answer, and the app's tests re-solve
+thousands of generated questions independently (for example by trying every rotation of a shape, every position of a hidden figure,
+every fold of a cube net, or every letter of the alphabet) to prove it. Word puzzles use banks that were checked offline against a full
+English word list (see `tools/build_verbal_data.py`); the app itself needs no extra libraries for this.
+
 Every question, answer, and worked solution is stored in `st.session_state`, so switching tabs,
 changing a dropdown, or clicking "Check Answer" never loses your current progress. The sidebar shows
-separate Maths and English scores.
+separate Maths, English and Reasoning scores.
 
 ## Project structure
 
@@ -48,10 +84,19 @@ year4_learning_app/
     │   ├── abacus_tab.py
     │   ├── abacus_engine.py      # Abacus drawing + bead-move simulator
     │   └── visuals.py            # Number-line and coordinate-grid SVG drawings
-    └── english/
-        ├── vocabulary_tab.py
-        ├── spelling_tab.py
-        └── web_words.py          # Internet word services (dictionary + topic words)
+    ├── english/
+    │   ├── vocabulary_tab.py
+    │   ├── spelling_tab.py
+    │   └── web_words.py          # Internet word services (dictionary + topic words)
+    └── reasoning/
+        ├── engine.py             # Shared question / answer / explanation interface
+        ├── verbal_tab.py         # 19 verbal reasoning topics
+        ├── verbal_data.py        # Hand-written banks (synonyms, odd-one-out, stages, analogies...)
+        ├── verbal_generated.py   # Word puzzles verified offline (do not edit by hand)
+        ├── nonverbal_tab.py      # 9 non-verbal reasoning topics
+        └── nvr_draw.py           # SVG drawing: shapes, matrices, pieces, dice and cubes
+tools/
+└── build_verbal_data.py          # OFFLINE builder for verbal_generated.py (not used when the app runs)
 ```
 
 ## How the internet word feature works
@@ -116,9 +161,8 @@ steps are:
    git push -u origin main
    ```
    Make sure `app.py`, `requirements.txt`, and the whole `modules/` folder
-   (including its sub-folders `modules/maths/` and `modules/english/`, and the
-   three empty `__init__.py` files inside `modules/`, `modules/maths/` and
-   `modules/english/`) all end up in the repo root — the file layout on GitHub
+   (including its sub-folders `modules/maths/`, `modules/english/` and `modules/reasoning/`, and the
+   four empty `__init__.py` files inside `modules/` and each of those sub-folders) all end up in the repo root — the file layout on GitHub
    must match the structure above exactly, since `app.py` imports from `modules.*`.
    (GitHub's web uploader skips nothing, but double-check the empty `__init__.py`
    files are really there.)
@@ -153,9 +197,9 @@ a minute or two — no extra steps needed.
 
 ### Notes & troubleshooting
 
-- **"ModuleNotFoundError: No module named 'modules'"** (or `modules.maths`) — this
+- **"ModuleNotFoundError: No module named 'modules'"** (or `modules.maths` / `modules.reasoning`) — this
   means the folder structure wasn't preserved when uploading to GitHub. Double-check
-  that `modules/` (with its `maths/` and `english/` sub-folders and every `__init__.py`)
+  that `modules/` (with its `maths/`, `english/` and `reasoning/` sub-folders and every `__init__.py`)
   sits in the same directory as `app.py`, at the repository root.
 - **App looks fine locally but fails to deploy** — check the "Manage app"
   logs on Streamlit Cloud (bottom-right of the app page); the most common

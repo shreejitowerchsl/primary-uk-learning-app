@@ -6,6 +6,7 @@ An interactive Streamlit learning app for a UK Year 4/5 pupil, in two sections:
   🔢 MATHS    Addition & Subtraction (positive + negative numbers), Multiplication,
               Division, Powers, Word Problems, Coordinates, Abacus
   📚 ENGLISH  Vocabulary (study, quiz, word search), Spelling (Year 4 & 5)
+  🧠 REASONING Verbal Reasoning (19 topics), Non-Verbal Reasoning (9 topics)
 
 Run locally with:  streamlit run app.py
 See README.md for how to deploy this to Streamlit Community Cloud.
@@ -24,6 +25,7 @@ from modules.maths import (
     word_problems_tab,
 )
 from modules.english import spelling_tab, vocabulary_tab
+from modules.reasoning import nonverbal_tab, verbal_tab
 
 # =============================================================================
 # PAGE CONFIG & STYLING
@@ -116,7 +118,7 @@ init_session_state()
 
 st.markdown('<div class="big-title">🎓 Year 4/5 Learning Adventure</div>', unsafe_allow_html=True)
 st.markdown(
-    '<div class="sub-title">Maths and English practice — all in one place! 🚀</div>',
+    '<div class="sub-title">Maths, English and Reasoning practice — all in one place! 🚀</div>',
     unsafe_allow_html=True,
 )
 
@@ -132,20 +134,22 @@ with st.sidebar:
     _score_badge(st.session_state.score_maths_correct, st.session_state.score_maths_attempted)
     st.markdown("**📚 English**")
     _score_badge(st.session_state.score_english_correct, st.session_state.score_english_attempted)
+    st.markdown("**🧠 Reasoning**")
+    _score_badge(st.session_state.score_reasoning_correct, st.session_state.score_reasoning_attempted)
     st.markdown("---")
     st.markdown(
         "**How to use this app:**\n"
-        "1. Pick **Maths** or **English** at the top.\n"
+        "1. Pick **Maths**, **English** or **Reasoning** at the top.\n"
         "2. Choose a topic tab.\n"
         "3. Click **Generate Question**, type your answer, then **Check Answer**.\n"
         "4. Stuck? Open **Show Step-by-Step Solution**!"
     )
 
 # =============================================================================
-# TWO MAIN SECTIONS: MATHS and ENGLISH
+# THREE MAIN SECTIONS: MATHS, ENGLISH and REASONING
 # =============================================================================
 
-section_maths, section_english = st.tabs(["🔢  MATHS", "📚  ENGLISH"])
+section_maths, section_english, section_reasoning = st.tabs(["🔢  MATHS", "📚  ENGLISH", "🧠  REASONING"])
 
 with section_maths:
     (
@@ -188,6 +192,13 @@ with section_english:
         vocabulary_tab.render()
     with tab_spelling:
         spelling_tab.render()
+
+with section_reasoning:
+    tab_verbal, tab_nonverbal = st.tabs(["💬 Verbal Reasoning", "🔷 Non-Verbal Reasoning"])
+    with tab_verbal:
+        verbal_tab.render()
+    with tab_nonverbal:
+        nonverbal_tab.render()
 
 # =============================================================================
 # FOOTER

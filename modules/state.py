@@ -6,6 +6,7 @@ import copy
 import streamlit as st
 
 from modules.english.web_words import SURPRISE_ME
+from modules.reasoning.engine import LEVELS as REASONING_LEVELS, MIXED as REASONING_MIXED
 
 DEFAULTS = {
     # --- global score tracking ---
@@ -15,6 +16,8 @@ DEFAULTS = {
     "score_maths_attempted": 0,
     "score_english_correct": 0,
     "score_english_attempted": 0,
+    "score_reasoning_correct": 0,
+    "score_reasoning_attempted": 0,
 
     # --- Multiplication module ---
     "mult_category": "2-Digit x 1-Digit",
@@ -128,6 +131,17 @@ DEFAULTS = {
     "spell_test_year_group": None,
     "spell_test_feedback": None,
 }
+
+# --- Reasoning tabs (verbal "vr" and non-verbal "nvr") share the same set of keys ---
+for _prefix in ("vr", "nvr"):
+    DEFAULTS.update({
+        f"{_prefix}_topic": REASONING_MIXED,
+        f"{_prefix}_level": REASONING_LEVELS[0],
+        f"{_prefix}_last_combo": None,
+        f"{_prefix}_qid": 0,
+        f"{_prefix}_q": None,
+        f"{_prefix}_feedback": None,
+    })
 
 
 def init_session_state():
